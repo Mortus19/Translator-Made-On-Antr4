@@ -15,6 +15,10 @@
 class  gramBaseVisitor : public gramVisitor {
 public:
 
+  virtual std::any visitPrint(gramParser::PrintContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitOneLineProgAssign(gramParser::OneLineProgAssignContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -24,6 +28,30 @@ public:
   }
 
   virtual std::any visitMultLineProg(gramParser::MultLineProgContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitDoubleRule1(gramParser::DoubleRule1Context *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitDoubleRule2(gramParser::DoubleRule2Context *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitDoubleRule3(gramParser::DoubleRule3Context *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitPrintVariable(gramParser::PrintVariableContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitOneLinePrint(gramParser::OneLinePrintContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitMultLinePrint(gramParser::MultLinePrintContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -47,7 +75,7 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitInt(gramParser::IntContext *ctx) override {
+  virtual std::any visitDouble(gramParser::DoubleContext *ctx) override {
     return visitChildren(ctx);
   }
 
