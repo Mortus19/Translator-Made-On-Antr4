@@ -43,35 +43,43 @@ void gramParserInitialize() {
   assert(gramParserStaticData == nullptr);
   auto staticData = std::make_unique<GramParserStaticData>(
     std::vector<std::string>{
-      "prog", "print_var", "expr", "assign"
+      "prog", "dbl", "print_any", "string_for_print", "expr", "assign"
     },
     std::vector<std::string>{
-      "", "", "';'", "','", "", "'*'", "'/'", "'+'", "'-'", "'='", "'print'", 
-      "'('", "')'"
+      "", "", "';'", "','", "", "'*'", "'/'", "'.'", "'+'", "'-'", "'='", 
+      "'print'", "'('", "')'"
     },
     std::vector<std::string>{
-      "", "INT", "SEP", "SEP_FOR_FUNCTIONS", "WS", "MUL", "DIV", "ADD", 
+      "", "INT", "SEP", "SEP_FOR_FUNCTIONS", "WS", "MUL", "DIV", "PT", "ADD", 
       "SUB", "EQUAL", "PRINT", "OPEN_BRAKET", "CLOSE_BRAKET", "VAR"
     }
   );
   static const int32_t serializedATNSegment[] = {
-  	4,1,13,57,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,1,0,1,0,1,0,1,0,3,0,13,8,0,
-  	1,0,1,0,1,0,1,0,3,0,19,8,0,5,0,21,8,0,10,0,12,0,24,9,0,1,1,1,1,1,1,1,
-  	1,1,1,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,3,2,40,8,2,1,2,1,2,1,2,1,2,
-  	1,2,1,2,5,2,48,8,2,10,2,12,2,51,9,2,1,3,1,3,1,3,1,3,1,3,0,2,0,4,4,0,2,
-  	4,6,0,2,1,0,5,6,1,0,7,8,61,0,12,1,0,0,0,2,25,1,0,0,0,4,39,1,0,0,0,6,52,
-  	1,0,0,0,8,9,6,0,-1,0,9,13,3,4,2,0,10,13,3,6,3,0,11,13,3,2,1,0,12,8,1,
-  	0,0,0,12,10,1,0,0,0,12,11,1,0,0,0,13,22,1,0,0,0,14,15,10,1,0,0,15,16,
-  	5,2,0,0,16,18,3,0,0,0,17,19,5,0,0,1,18,17,1,0,0,0,18,19,1,0,0,0,19,21,
-  	1,0,0,0,20,14,1,0,0,0,21,24,1,0,0,0,22,20,1,0,0,0,22,23,1,0,0,0,23,1,
-  	1,0,0,0,24,22,1,0,0,0,25,26,5,10,0,0,26,27,5,11,0,0,27,28,5,13,0,0,28,
-  	29,5,12,0,0,29,3,1,0,0,0,30,31,6,2,-1,0,31,32,5,8,0,0,32,40,3,4,2,6,33,
-  	40,5,1,0,0,34,35,5,11,0,0,35,36,3,4,2,0,36,37,5,12,0,0,37,40,1,0,0,0,
-  	38,40,5,13,0,0,39,30,1,0,0,0,39,33,1,0,0,0,39,34,1,0,0,0,39,38,1,0,0,
-  	0,40,49,1,0,0,0,41,42,10,5,0,0,42,43,7,0,0,0,43,48,3,4,2,6,44,45,10,4,
-  	0,0,45,46,7,1,0,0,46,48,3,4,2,5,47,41,1,0,0,0,47,44,1,0,0,0,48,51,1,0,
-  	0,0,49,47,1,0,0,0,49,50,1,0,0,0,50,5,1,0,0,0,51,49,1,0,0,0,52,53,5,13,
-  	0,0,53,54,5,9,0,0,54,55,3,4,2,0,55,7,1,0,0,0,6,12,18,22,39,47,49
+  	4,1,14,83,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,1,0,1,0,1,0,
+  	1,0,3,0,17,8,0,1,0,1,0,1,0,1,0,3,0,23,8,0,5,0,25,8,0,10,0,12,0,28,9,0,
+  	1,1,1,1,1,1,1,1,1,1,1,1,3,1,36,8,1,1,2,1,2,1,2,1,2,1,2,1,3,1,3,1,3,1,
+  	3,1,3,1,3,1,3,3,3,50,8,3,5,3,52,8,3,10,3,12,3,55,9,3,1,4,1,4,1,4,1,4,
+  	1,4,1,4,1,4,1,4,1,4,3,4,66,8,4,1,4,1,4,1,4,1,4,1,4,1,4,5,4,74,8,4,10,
+  	4,12,4,77,9,4,1,5,1,5,1,5,1,5,1,5,0,3,0,6,8,6,0,2,4,6,8,10,0,2,1,0,5,
+  	6,1,0,8,9,89,0,16,1,0,0,0,2,35,1,0,0,0,4,37,1,0,0,0,6,42,1,0,0,0,8,65,
+  	1,0,0,0,10,78,1,0,0,0,12,13,6,0,-1,0,13,17,3,8,4,0,14,17,3,10,5,0,15,
+  	17,3,4,2,0,16,12,1,0,0,0,16,14,1,0,0,0,16,15,1,0,0,0,17,26,1,0,0,0,18,
+  	19,10,1,0,0,19,20,5,2,0,0,20,22,3,0,0,0,21,23,5,0,0,1,22,21,1,0,0,0,22,
+  	23,1,0,0,0,23,25,1,0,0,0,24,18,1,0,0,0,25,28,1,0,0,0,26,24,1,0,0,0,26,
+  	27,1,0,0,0,27,1,1,0,0,0,28,26,1,0,0,0,29,36,5,1,0,0,30,31,5,7,0,0,31,
+  	36,5,1,0,0,32,33,5,1,0,0,33,34,5,7,0,0,34,36,5,1,0,0,35,29,1,0,0,0,35,
+  	30,1,0,0,0,35,32,1,0,0,0,36,3,1,0,0,0,37,38,5,11,0,0,38,39,5,12,0,0,39,
+  	40,3,6,3,0,40,41,5,13,0,0,41,5,1,0,0,0,42,43,6,3,-1,0,43,44,3,8,4,0,44,
+  	53,1,0,0,0,45,46,10,1,0,0,46,47,5,3,0,0,47,49,3,6,3,0,48,50,5,0,0,1,49,
+  	48,1,0,0,0,49,50,1,0,0,0,50,52,1,0,0,0,51,45,1,0,0,0,52,55,1,0,0,0,53,
+  	51,1,0,0,0,53,54,1,0,0,0,54,7,1,0,0,0,55,53,1,0,0,0,56,57,6,4,-1,0,57,
+  	58,5,9,0,0,58,66,3,8,4,6,59,66,3,2,1,0,60,61,5,12,0,0,61,62,3,8,4,0,62,
+  	63,5,13,0,0,63,66,1,0,0,0,64,66,5,14,0,0,65,56,1,0,0,0,65,59,1,0,0,0,
+  	65,60,1,0,0,0,65,64,1,0,0,0,66,75,1,0,0,0,67,68,10,5,0,0,68,69,7,0,0,
+  	0,69,74,3,8,4,6,70,71,10,4,0,0,71,72,7,1,0,0,72,74,3,8,4,5,73,67,1,0,
+  	0,0,73,70,1,0,0,0,74,77,1,0,0,0,75,73,1,0,0,0,75,76,1,0,0,0,76,9,1,0,
+  	0,0,77,75,1,0,0,0,78,79,5,14,0,0,79,80,5,10,0,0,80,81,3,8,4,0,81,11,1,
+  	0,0,0,9,16,22,26,35,49,53,65,73,75
   };
   staticData->serializedATN = antlr4::atn::SerializedATNView(serializedATNSegment, sizeof(serializedATNSegment) / sizeof(serializedATNSegment[0]));
 
@@ -137,8 +145,8 @@ void gramParser::ProgContext::copyFrom(ProgContext *ctx) {
 
 //----------------- PrintContext ------------------------------------------------------------------
 
-gramParser::Print_varContext* gramParser::PrintContext::print_var() {
-  return getRuleContext<gramParser::Print_varContext>(0);
+gramParser::Print_anyContext* gramParser::PrintContext::print_any() {
+  return getRuleContext<gramParser::Print_anyContext>(0);
 }
 
 gramParser::PrintContext::PrintContext(ProgContext *ctx) { copyFrom(ctx); }
@@ -233,7 +241,7 @@ gramParser::ProgContext* gramParser::prog(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
-    setState(12);
+    setState(16);
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 0, _ctx)) {
     case 1: {
@@ -241,7 +249,7 @@ gramParser::ProgContext* gramParser::prog(int precedence) {
       _ctx = _localctx;
       previousContext = _localctx;
 
-      setState(9);
+      setState(13);
       expr(0);
       break;
     }
@@ -250,7 +258,7 @@ gramParser::ProgContext* gramParser::prog(int precedence) {
       _localctx = _tracker.createInstance<OneLineProgAssignContext>(_localctx);
       _ctx = _localctx;
       previousContext = _localctx;
-      setState(10);
+      setState(14);
       assign();
       break;
     }
@@ -259,8 +267,8 @@ gramParser::ProgContext* gramParser::prog(int precedence) {
       _localctx = _tracker.createInstance<PrintContext>(_localctx);
       _ctx = _localctx;
       previousContext = _localctx;
-      setState(11);
-      print_var();
+      setState(15);
+      print_any();
       break;
     }
 
@@ -268,7 +276,7 @@ gramParser::ProgContext* gramParser::prog(int precedence) {
       break;
     }
     _ctx->stop = _input->LT(-1);
-    setState(22);
+    setState(26);
     _errHandler->sync(this);
     alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 2, _ctx);
     while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
@@ -279,19 +287,19 @@ gramParser::ProgContext* gramParser::prog(int precedence) {
         auto newContext = _tracker.createInstance<MultLineProgContext>(_tracker.createInstance<ProgContext>(parentContext, parentState));
         _localctx = newContext;
         pushNewRecursionContext(newContext, startState, RuleProg);
-        setState(14);
+        setState(18);
 
         if (!(precpred(_ctx, 1))) throw FailedPredicateException(this, "precpred(_ctx, 1)");
-        setState(15);
+        setState(19);
         match(gramParser::SEP);
-        setState(16);
+        setState(20);
         prog(0);
-        setState(18);
+        setState(22);
         _errHandler->sync(this);
 
         switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 1, _ctx)) {
         case 1: {
-          setState(17);
+          setState(21);
           match(gramParser::EOF);
           break;
         }
@@ -300,7 +308,7 @@ gramParser::ProgContext* gramParser::prog(int precedence) {
           break;
         } 
       }
-      setState(24);
+      setState(28);
       _errHandler->sync(this);
       alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 2, _ctx);
     }
@@ -313,18 +321,149 @@ gramParser::ProgContext* gramParser::prog(int precedence) {
   return _localctx;
 }
 
-//----------------- Print_varContext ------------------------------------------------------------------
+//----------------- DblContext ------------------------------------------------------------------
 
-gramParser::Print_varContext::Print_varContext(ParserRuleContext *parent, size_t invokingState)
+gramParser::DblContext::DblContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-size_t gramParser::Print_varContext::getRuleIndex() const {
-  return gramParser::RulePrint_var;
+size_t gramParser::DblContext::getRuleIndex() const {
+  return gramParser::RuleDbl;
 }
 
-void gramParser::Print_varContext::copyFrom(Print_varContext *ctx) {
+void gramParser::DblContext::copyFrom(DblContext *ctx) {
+  ParserRuleContext::copyFrom(ctx);
+}
+
+//----------------- DoubleRule3Context ------------------------------------------------------------------
+
+std::vector<tree::TerminalNode *> gramParser::DoubleRule3Context::INT() {
+  return getTokens(gramParser::INT);
+}
+
+tree::TerminalNode* gramParser::DoubleRule3Context::INT(size_t i) {
+  return getToken(gramParser::INT, i);
+}
+
+tree::TerminalNode* gramParser::DoubleRule3Context::PT() {
+  return getToken(gramParser::PT, 0);
+}
+
+gramParser::DoubleRule3Context::DoubleRule3Context(DblContext *ctx) { copyFrom(ctx); }
+
+
+std::any gramParser::DoubleRule3Context::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<gramVisitor*>(visitor))
+    return parserVisitor->visitDoubleRule3(this);
+  else
+    return visitor->visitChildren(this);
+}
+//----------------- DoubleRule1Context ------------------------------------------------------------------
+
+tree::TerminalNode* gramParser::DoubleRule1Context::INT() {
+  return getToken(gramParser::INT, 0);
+}
+
+gramParser::DoubleRule1Context::DoubleRule1Context(DblContext *ctx) { copyFrom(ctx); }
+
+
+std::any gramParser::DoubleRule1Context::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<gramVisitor*>(visitor))
+    return parserVisitor->visitDoubleRule1(this);
+  else
+    return visitor->visitChildren(this);
+}
+//----------------- DoubleRule2Context ------------------------------------------------------------------
+
+tree::TerminalNode* gramParser::DoubleRule2Context::PT() {
+  return getToken(gramParser::PT, 0);
+}
+
+tree::TerminalNode* gramParser::DoubleRule2Context::INT() {
+  return getToken(gramParser::INT, 0);
+}
+
+gramParser::DoubleRule2Context::DoubleRule2Context(DblContext *ctx) { copyFrom(ctx); }
+
+
+std::any gramParser::DoubleRule2Context::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<gramVisitor*>(visitor))
+    return parserVisitor->visitDoubleRule2(this);
+  else
+    return visitor->visitChildren(this);
+}
+gramParser::DblContext* gramParser::dbl() {
+  DblContext *_localctx = _tracker.createInstance<DblContext>(_ctx, getState());
+  enterRule(_localctx, 2, gramParser::RuleDbl);
+
+#if __cplusplus > 201703L
+  auto onExit = finally([=, this] {
+#else
+  auto onExit = finally([=] {
+#endif
+    exitRule();
+  });
+  try {
+    setState(35);
+    _errHandler->sync(this);
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 3, _ctx)) {
+    case 1: {
+      _localctx = _tracker.createInstance<gramParser::DoubleRule1Context>(_localctx);
+      enterOuterAlt(_localctx, 1);
+      setState(29);
+      match(gramParser::INT);
+      break;
+    }
+
+    case 2: {
+      _localctx = _tracker.createInstance<gramParser::DoubleRule2Context>(_localctx);
+      enterOuterAlt(_localctx, 2);
+      setState(30);
+      match(gramParser::PT);
+      setState(31);
+      match(gramParser::INT);
+      break;
+    }
+
+    case 3: {
+      _localctx = _tracker.createInstance<gramParser::DoubleRule3Context>(_localctx);
+      enterOuterAlt(_localctx, 3);
+      setState(32);
+      match(gramParser::INT);
+      setState(33);
+      match(gramParser::PT);
+      setState(34);
+      match(gramParser::INT);
+      break;
+    }
+
+    default:
+      break;
+    }
+   
+  }
+  catch (RecognitionException &e) {
+    _errHandler->reportError(this, e);
+    _localctx->exception = std::current_exception();
+    _errHandler->recover(this, _localctx->exception);
+  }
+
+  return _localctx;
+}
+
+//----------------- Print_anyContext ------------------------------------------------------------------
+
+gramParser::Print_anyContext::Print_anyContext(ParserRuleContext *parent, size_t invokingState)
+  : ParserRuleContext(parent, invokingState) {
+}
+
+
+size_t gramParser::Print_anyContext::getRuleIndex() const {
+  return gramParser::RulePrint_any;
+}
+
+void gramParser::Print_anyContext::copyFrom(Print_anyContext *ctx) {
   ParserRuleContext::copyFrom(ctx);
 }
 
@@ -338,15 +477,15 @@ tree::TerminalNode* gramParser::PrintVariableContext::OPEN_BRAKET() {
   return getToken(gramParser::OPEN_BRAKET, 0);
 }
 
-tree::TerminalNode* gramParser::PrintVariableContext::VAR() {
-  return getToken(gramParser::VAR, 0);
+gramParser::String_for_printContext* gramParser::PrintVariableContext::string_for_print() {
+  return getRuleContext<gramParser::String_for_printContext>(0);
 }
 
 tree::TerminalNode* gramParser::PrintVariableContext::CLOSE_BRAKET() {
   return getToken(gramParser::CLOSE_BRAKET, 0);
 }
 
-gramParser::PrintVariableContext::PrintVariableContext(Print_varContext *ctx) { copyFrom(ctx); }
+gramParser::PrintVariableContext::PrintVariableContext(Print_anyContext *ctx) { copyFrom(ctx); }
 
 
 std::any gramParser::PrintVariableContext::accept(tree::ParseTreeVisitor *visitor) {
@@ -355,9 +494,9 @@ std::any gramParser::PrintVariableContext::accept(tree::ParseTreeVisitor *visito
   else
     return visitor->visitChildren(this);
 }
-gramParser::Print_varContext* gramParser::print_var() {
-  Print_varContext *_localctx = _tracker.createInstance<Print_varContext>(_ctx, getState());
-  enterRule(_localctx, 2, gramParser::RulePrint_var);
+gramParser::Print_anyContext* gramParser::print_any() {
+  Print_anyContext *_localctx = _tracker.createInstance<Print_anyContext>(_ctx, getState());
+  enterRule(_localctx, 4, gramParser::RulePrint_any);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -369,13 +508,13 @@ gramParser::Print_varContext* gramParser::print_var() {
   try {
     _localctx = _tracker.createInstance<gramParser::PrintVariableContext>(_localctx);
     enterOuterAlt(_localctx, 1);
-    setState(25);
+    setState(37);
     match(gramParser::PRINT);
-    setState(26);
+    setState(38);
     match(gramParser::OPEN_BRAKET);
-    setState(27);
-    match(gramParser::VAR);
-    setState(28);
+    setState(39);
+    string_for_print(0);
+    setState(40);
     match(gramParser::CLOSE_BRAKET);
    
   }
@@ -385,6 +524,141 @@ gramParser::Print_varContext* gramParser::print_var() {
     _errHandler->recover(this, _localctx->exception);
   }
 
+  return _localctx;
+}
+
+//----------------- String_for_printContext ------------------------------------------------------------------
+
+gramParser::String_for_printContext::String_for_printContext(ParserRuleContext *parent, size_t invokingState)
+  : ParserRuleContext(parent, invokingState) {
+}
+
+
+size_t gramParser::String_for_printContext::getRuleIndex() const {
+  return gramParser::RuleString_for_print;
+}
+
+void gramParser::String_for_printContext::copyFrom(String_for_printContext *ctx) {
+  ParserRuleContext::copyFrom(ctx);
+}
+
+//----------------- OneLinePrintContext ------------------------------------------------------------------
+
+gramParser::ExprContext* gramParser::OneLinePrintContext::expr() {
+  return getRuleContext<gramParser::ExprContext>(0);
+}
+
+gramParser::OneLinePrintContext::OneLinePrintContext(String_for_printContext *ctx) { copyFrom(ctx); }
+
+
+std::any gramParser::OneLinePrintContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<gramVisitor*>(visitor))
+    return parserVisitor->visitOneLinePrint(this);
+  else
+    return visitor->visitChildren(this);
+}
+//----------------- MultLinePrintContext ------------------------------------------------------------------
+
+std::vector<gramParser::String_for_printContext *> gramParser::MultLinePrintContext::string_for_print() {
+  return getRuleContexts<gramParser::String_for_printContext>();
+}
+
+gramParser::String_for_printContext* gramParser::MultLinePrintContext::string_for_print(size_t i) {
+  return getRuleContext<gramParser::String_for_printContext>(i);
+}
+
+tree::TerminalNode* gramParser::MultLinePrintContext::SEP_FOR_FUNCTIONS() {
+  return getToken(gramParser::SEP_FOR_FUNCTIONS, 0);
+}
+
+tree::TerminalNode* gramParser::MultLinePrintContext::EOF() {
+  return getToken(gramParser::EOF, 0);
+}
+
+gramParser::MultLinePrintContext::MultLinePrintContext(String_for_printContext *ctx) { copyFrom(ctx); }
+
+
+std::any gramParser::MultLinePrintContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<gramVisitor*>(visitor))
+    return parserVisitor->visitMultLinePrint(this);
+  else
+    return visitor->visitChildren(this);
+}
+
+gramParser::String_for_printContext* gramParser::string_for_print() {
+   return string_for_print(0);
+}
+
+gramParser::String_for_printContext* gramParser::string_for_print(int precedence) {
+  ParserRuleContext *parentContext = _ctx;
+  size_t parentState = getState();
+  gramParser::String_for_printContext *_localctx = _tracker.createInstance<String_for_printContext>(_ctx, parentState);
+  gramParser::String_for_printContext *previousContext = _localctx;
+  (void)previousContext; // Silence compiler, in case the context is not used by generated code.
+  size_t startState = 6;
+  enterRecursionRule(_localctx, 6, gramParser::RuleString_for_print, precedence);
+
+    
+
+#if __cplusplus > 201703L
+  auto onExit = finally([=, this] {
+#else
+  auto onExit = finally([=] {
+#endif
+    unrollRecursionContexts(parentContext);
+  });
+  try {
+    size_t alt;
+    enterOuterAlt(_localctx, 1);
+    _localctx = _tracker.createInstance<OneLinePrintContext>(_localctx);
+    _ctx = _localctx;
+    previousContext = _localctx;
+
+    setState(43);
+    expr(0);
+    _ctx->stop = _input->LT(-1);
+    setState(53);
+    _errHandler->sync(this);
+    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 5, _ctx);
+    while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
+      if (alt == 1) {
+        if (!_parseListeners.empty())
+          triggerExitRuleEvent();
+        previousContext = _localctx;
+        auto newContext = _tracker.createInstance<MultLinePrintContext>(_tracker.createInstance<String_for_printContext>(parentContext, parentState));
+        _localctx = newContext;
+        pushNewRecursionContext(newContext, startState, RuleString_for_print);
+        setState(45);
+
+        if (!(precpred(_ctx, 1))) throw FailedPredicateException(this, "precpred(_ctx, 1)");
+        setState(46);
+        match(gramParser::SEP_FOR_FUNCTIONS);
+        setState(47);
+        string_for_print(0);
+        setState(49);
+        _errHandler->sync(this);
+
+        switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 4, _ctx)) {
+        case 1: {
+          setState(48);
+          match(gramParser::EOF);
+          break;
+        }
+
+        default:
+          break;
+        } 
+      }
+      setState(55);
+      _errHandler->sync(this);
+      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 5, _ctx);
+    }
+  }
+  catch (RecognitionException &e) {
+    _errHandler->reportError(this, e);
+    _localctx->exception = std::current_exception();
+    _errHandler->recover(this, _localctx->exception);
+  }
   return _localctx;
 }
 
@@ -514,18 +788,18 @@ std::any gramParser::AddSubContext::accept(tree::ParseTreeVisitor *visitor) {
   else
     return visitor->visitChildren(this);
 }
-//----------------- IntContext ------------------------------------------------------------------
+//----------------- DoubleContext ------------------------------------------------------------------
 
-tree::TerminalNode* gramParser::IntContext::INT() {
-  return getToken(gramParser::INT, 0);
+gramParser::DblContext* gramParser::DoubleContext::dbl() {
+  return getRuleContext<gramParser::DblContext>(0);
 }
 
-gramParser::IntContext::IntContext(ExprContext *ctx) { copyFrom(ctx); }
+gramParser::DoubleContext::DoubleContext(ExprContext *ctx) { copyFrom(ctx); }
 
 
-std::any gramParser::IntContext::accept(tree::ParseTreeVisitor *visitor) {
+std::any gramParser::DoubleContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<gramVisitor*>(visitor))
-    return parserVisitor->visitInt(this);
+    return parserVisitor->visitDouble(this);
   else
     return visitor->visitChildren(this);
 }
@@ -540,8 +814,8 @@ gramParser::ExprContext* gramParser::expr(int precedence) {
   gramParser::ExprContext *_localctx = _tracker.createInstance<ExprContext>(_ctx, parentState);
   gramParser::ExprContext *previousContext = _localctx;
   (void)previousContext; // Silence compiler, in case the context is not used by generated code.
-  size_t startState = 4;
-  enterRecursionRule(_localctx, 4, gramParser::RuleExpr, precedence);
+  size_t startState = 8;
+  enterRecursionRule(_localctx, 8, gramParser::RuleExpr, precedence);
 
     size_t _la = 0;
 
@@ -555,7 +829,7 @@ gramParser::ExprContext* gramParser::expr(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
-    setState(39);
+    setState(65);
     _errHandler->sync(this);
     switch (_input->LA(1)) {
       case gramParser::SUB: {
@@ -563,19 +837,20 @@ gramParser::ExprContext* gramParser::expr(int precedence) {
         _ctx = _localctx;
         previousContext = _localctx;
 
-        setState(31);
+        setState(57);
         match(gramParser::SUB);
-        setState(32);
+        setState(58);
         expr(6);
         break;
       }
 
-      case gramParser::INT: {
-        _localctx = _tracker.createInstance<IntContext>(_localctx);
+      case gramParser::INT:
+      case gramParser::PT: {
+        _localctx = _tracker.createInstance<DoubleContext>(_localctx);
         _ctx = _localctx;
         previousContext = _localctx;
-        setState(33);
-        match(gramParser::INT);
+        setState(59);
+        dbl();
         break;
       }
 
@@ -583,11 +858,11 @@ gramParser::ExprContext* gramParser::expr(int precedence) {
         _localctx = _tracker.createInstance<ParensContext>(_localctx);
         _ctx = _localctx;
         previousContext = _localctx;
-        setState(34);
+        setState(60);
         match(gramParser::OPEN_BRAKET);
-        setState(35);
+        setState(61);
         expr(0);
-        setState(36);
+        setState(62);
         match(gramParser::CLOSE_BRAKET);
         break;
       }
@@ -596,7 +871,7 @@ gramParser::ExprContext* gramParser::expr(int precedence) {
         _localctx = _tracker.createInstance<OnlyVarContext>(_localctx);
         _ctx = _localctx;
         previousContext = _localctx;
-        setState(38);
+        setState(64);
         match(gramParser::VAR);
         break;
       }
@@ -605,25 +880,25 @@ gramParser::ExprContext* gramParser::expr(int precedence) {
       throw NoViableAltException(this);
     }
     _ctx->stop = _input->LT(-1);
-    setState(49);
+    setState(75);
     _errHandler->sync(this);
-    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 5, _ctx);
+    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 8, _ctx);
     while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
       if (alt == 1) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        setState(47);
+        setState(73);
         _errHandler->sync(this);
-        switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 4, _ctx)) {
+        switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 7, _ctx)) {
         case 1: {
           auto newContext = _tracker.createInstance<MulDivContext>(_tracker.createInstance<ExprContext>(parentContext, parentState));
           _localctx = newContext;
           pushNewRecursionContext(newContext, startState, RuleExpr);
-          setState(41);
+          setState(67);
 
           if (!(precpred(_ctx, 5))) throw FailedPredicateException(this, "precpred(_ctx, 5)");
-          setState(42);
+          setState(68);
           antlrcpp::downCast<MulDivContext *>(_localctx)->op = _input->LT(1);
           _la = _input->LA(1);
           if (!(_la == gramParser::MUL
@@ -635,7 +910,7 @@ gramParser::ExprContext* gramParser::expr(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(43);
+          setState(69);
           expr(6);
           break;
         }
@@ -644,10 +919,10 @@ gramParser::ExprContext* gramParser::expr(int precedence) {
           auto newContext = _tracker.createInstance<AddSubContext>(_tracker.createInstance<ExprContext>(parentContext, parentState));
           _localctx = newContext;
           pushNewRecursionContext(newContext, startState, RuleExpr);
-          setState(44);
+          setState(70);
 
           if (!(precpred(_ctx, 4))) throw FailedPredicateException(this, "precpred(_ctx, 4)");
-          setState(45);
+          setState(71);
           antlrcpp::downCast<AddSubContext *>(_localctx)->op = _input->LT(1);
           _la = _input->LA(1);
           if (!(_la == gramParser::ADD
@@ -659,7 +934,7 @@ gramParser::ExprContext* gramParser::expr(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(46);
+          setState(72);
           expr(5);
           break;
         }
@@ -668,9 +943,9 @@ gramParser::ExprContext* gramParser::expr(int precedence) {
           break;
         } 
       }
-      setState(51);
+      setState(77);
       _errHandler->sync(this);
-      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 5, _ctx);
+      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 8, _ctx);
     }
   }
   catch (RecognitionException &e) {
@@ -721,7 +996,7 @@ std::any gramParser::AssignedContext::accept(tree::ParseTreeVisitor *visitor) {
 }
 gramParser::AssignContext* gramParser::assign() {
   AssignContext *_localctx = _tracker.createInstance<AssignContext>(_ctx, getState());
-  enterRule(_localctx, 6, gramParser::RuleAssign);
+  enterRule(_localctx, 10, gramParser::RuleAssign);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -733,11 +1008,11 @@ gramParser::AssignContext* gramParser::assign() {
   try {
     _localctx = _tracker.createInstance<gramParser::AssignedContext>(_localctx);
     enterOuterAlt(_localctx, 1);
-    setState(52);
+    setState(78);
     match(gramParser::VAR);
-    setState(53);
+    setState(79);
     match(gramParser::EQUAL);
-    setState(54);
+    setState(80);
     expr(0);
    
   }
@@ -753,7 +1028,8 @@ gramParser::AssignContext* gramParser::assign() {
 bool gramParser::sempred(RuleContext *context, size_t ruleIndex, size_t predicateIndex) {
   switch (ruleIndex) {
     case 0: return progSempred(antlrcpp::downCast<ProgContext *>(context), predicateIndex);
-    case 2: return exprSempred(antlrcpp::downCast<ExprContext *>(context), predicateIndex);
+    case 3: return string_for_printSempred(antlrcpp::downCast<String_for_printContext *>(context), predicateIndex);
+    case 4: return exprSempred(antlrcpp::downCast<ExprContext *>(context), predicateIndex);
 
   default:
     break;
@@ -771,10 +1047,20 @@ bool gramParser::progSempred(ProgContext *_localctx, size_t predicateIndex) {
   return true;
 }
 
+bool gramParser::string_for_printSempred(String_for_printContext *_localctx, size_t predicateIndex) {
+  switch (predicateIndex) {
+    case 1: return precpred(_ctx, 1);
+
+  default:
+    break;
+  }
+  return true;
+}
+
 bool gramParser::exprSempred(ExprContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
-    case 1: return precpred(_ctx, 5);
-    case 2: return precpred(_ctx, 4);
+    case 2: return precpred(_ctx, 5);
+    case 3: return precpred(_ctx, 4);
 
   default:
     break;

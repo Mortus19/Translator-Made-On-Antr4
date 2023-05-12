@@ -13,7 +13,7 @@ using namespace std;
 class gramUserVisitor : public gramBaseVisitor {
 public:
     std::vector<string>res;
-    map<string, int>value_var;
+    map<string, double>value_var;
     gramUserVisitor(string expression = "") {
         std::stringstream stream(expression);
         antlr4::ANTLRInputStream input(stream);
@@ -23,28 +23,37 @@ public:
         this->visit(parser.prog());
     }
     virtual std::any visitPrint(gramParser::PrintContext* ctx) override {
-        string ans = any_cast<string>(visit(ctx->print_var()));
-        res.push_back(ans);
+        visit(ctx->print_any());
         return 0;
     }
     virtual std::any visitPrintVariable(gramParser::PrintVariableContext* ctx) override {
-        string ans = ctx->VAR()->getText();
-        if (value_var.count(ans) == 0) {
-            ans = "NOT FOUND variable ";
-            ans += "'";
-            ans += ctx->VAR()->getText();
-            ans += "'";
-        }
-        else {
-            ans += " = ";
-            ans += to_string(value_var[ctx->VAR()->getText()]);
-        }
+        visit(ctx->string_for_print());
+        return 0;
+    }
+    virtual std::any visitOneLinePrint(gramParser::OneLinePrintContext* ctx) override {
+        double value = any_cast<double>(visit(ctx->expr()));
+        string ans = "";
+        ans += ctx->expr()->getText();
+        ans += " = ";
+        ans += to_string(value);
+        res.push_back(ans);
         return ans;
     }
+
+    virtual std::any visitMultLinePrint(gramParser::MultLinePrintContext* ctx) override {
+        
+        std::vector<gramParser::String_for_printContext*> arr_p =
+            ctx->string_for_print();
+        for (auto p : arr_p) {
+            visit(p);
+        }
+        return &res;
+    }
+
     virtual std::any visitOneLineProg(
         gramParser::OneLineProgContext* ctx)
         override {
-        int val = std::any_cast<int>(visit(ctx->expr()));
+        double val = std::any_cast<double>(visit(ctx->expr()));
         res.push_back(to_string(val));
         return val;
     }
@@ -55,11 +64,13 @@ public:
     }
     virtual std::any visitAssigned(gramParser::AssignedContext* ctx) override {
         string name_var = ctx->VAR()->getText();
-        int value = any_cast<int>(visit(ctx->expr()));
+        double value = any_cast<double>(visit(ctx->expr()));
         value_var[name_var] = value;
         return value;
     }
     virtual std::any visitOnlyVar(gramParser::OnlyVarContext* ctx) override {
+        //Надо сюда добавить обработчик того, что переменная не нашлась
+        //Чтобы выкидывало исключение
         string name_var = ctx->VAR()->getText();
         return value_var[name_var];
     }
@@ -75,36 +86,55 @@ public:
     }
     virtual std::any visitAddSub(
         gramParser::AddSubContext* ctx) override {
-        int left = std::any_cast<int>
+        double left = std::any_cast<double>
             (visit(ctx->expr(0)));
-        int right = std::any_cast<int>
+        double right = std::any_cast<double>
             (visit(ctx->expr(1)));
         if (ctx->op->getType() == gramParser::ADD) return left + right;
         else return left - right;
     }
     virtual std::any visitMulDiv(
         gramParser::MulDivContext* ctx) override {
-        int left = std::any_cast<int>
+        double left = std::any_cast<double>
             (visit(ctx->expr(0)));
-        int right = std::any_cast<int>
+        double right = std::any_cast<double>
             (visit(ctx->expr(1)));
         if (ctx->op->getType() == gramParser::MUL) return left * right;
         else return left / right;
     }
     virtual std::any visitParens(
         gramParser::ParensContext* ctx) override {
-        int val = std::any_cast<int>
+        double val = std::any_cast<double>
             (visit(ctx->expr()));
         return val;
     }
     virtual std::any visitNegativeExpr(gramParser::NegativeExprContext* ctx) override {
-        int val = std::any_cast<int> (visit(ctx->expr()));
+        double val = std::any_cast<double> (visit(ctx->expr()));
         return -val;
     }
-    virtual std::any visitInt(
-        gramParser::IntContext* ctx)
-        override {
-        return std::stoi(ctx->INT()->getText());
+
+    virtual std::any visitDoubleRule1(gramParser::DoubleRule1Context* ctx) override {
+        double value = std::stoi(ctx->INT()->getText());;
+        return value;
     }
 
+    virtual std::any visitDoubleRule2(gramParser::DoubleRule2Context* ctx) override {
+        string t = ".";
+        t += ctx->INT()->getText();
+        double value = stod(t);
+        return value;
+    }
+
+    virtual std::any visitDoubleRule3(gramParser::DoubleRule3Context* ctx) override {
+        string t = "";
+        t += ctx->INT(0)->getText();
+        t += ".";
+        t += ctx->INT(1)->getText();
+        double value = stod(t);
+        return value;
+    }
+
+    virtual std::any visitDouble(gramParser::DoubleContext* ctx) override {
+        return visit(ctx->dbl());
+    }
 };

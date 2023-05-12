@@ -27,7 +27,17 @@ public:
 
     virtual std::any visitMultLineProg(gramParser::MultLineProgContext *context) = 0;
 
+    virtual std::any visitDoubleRule1(gramParser::DoubleRule1Context *context) = 0;
+
+    virtual std::any visitDoubleRule2(gramParser::DoubleRule2Context *context) = 0;
+
+    virtual std::any visitDoubleRule3(gramParser::DoubleRule3Context *context) = 0;
+
     virtual std::any visitPrintVariable(gramParser::PrintVariableContext *context) = 0;
+
+    virtual std::any visitOneLinePrint(gramParser::OneLinePrintContext *context) = 0;
+
+    virtual std::any visitMultLinePrint(gramParser::MultLinePrintContext *context) = 0;
 
     virtual std::any visitOnlyVar(gramParser::OnlyVarContext *context) = 0;
 
@@ -39,7 +49,7 @@ public:
 
     virtual std::any visitAddSub(gramParser::AddSubContext *context) = 0;
 
-    virtual std::any visitInt(gramParser::IntContext *context) = 0;
+    virtual std::any visitDouble(gramParser::DoubleContext *context) = 0;
 
     virtual std::any visitAssigned(gramParser::AssignedContext *context) = 0;
 
