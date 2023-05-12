@@ -22,6 +22,25 @@ public:
         gramParser parser(&tokens);
         this->visit(parser.prog());
     }
+    virtual std::any visitPrint(gramParser::PrintContext* ctx) override {
+        string ans = any_cast<string>(visit(ctx->print_var()));
+        res.push_back(ans);
+        return 0;
+    }
+    virtual std::any visitPrintVariable(gramParser::PrintVariableContext* ctx) override {
+        string ans = ctx->VAR()->getText();
+        if (value_var.count(ans) == 0) {
+            ans = "NOT FOUND variable ";
+            ans += "'";
+            ans += ctx->VAR()->getText();
+            ans += "'";
+        }
+        else {
+            ans += " = ";
+            ans += to_string(value_var[ctx->VAR()->getText()]);
+        }
+        return ans;
+    }
     virtual std::any visitOneLineProg(
         gramParser::OneLineProgContext* ctx)
         override {

@@ -5,7 +5,7 @@ using namespace std;
 
 int main() {
     
-    std::string expression = "a = 10+20; b = 20 + a; a*2 + 3 * b";
+    std::string expression = "a = 10+20; b = 20 + a; print(b); print(c); print(c)";
     //std::string expression = "20 + 30; 30 + 22;55 - 33";
     gramUserVisitor visitor(expression);
     std::cout << "Result :" << std::endl;

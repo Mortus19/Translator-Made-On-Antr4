@@ -12,12 +12,13 @@
 class  gramParser : public antlr4::Parser {
 public:
   enum {
-    T__0 = 1, T__1 = 2, INT = 3, SEP = 4, WS = 5, MUL = 6, DIV = 7, ADD = 8, 
-    SUB = 9, EQUAL = 10, VAR = 11
+    INT = 1, SEP = 2, SEP_FOR_FUNCTIONS = 3, WS = 4, MUL = 5, DIV = 6, ADD = 7, 
+    SUB = 8, EQUAL = 9, PRINT = 10, OPEN_BRAKET = 11, CLOSE_BRAKET = 12, 
+    VAR = 13
   };
 
   enum {
-    RuleProg = 0, RuleExpr = 1, RuleAssign = 2
+    RuleProg = 0, RulePrint_var = 1, RuleExpr = 2, RuleAssign = 3
   };
 
   explicit gramParser(antlr4::TokenStream *input);
@@ -38,6 +39,7 @@ public:
 
 
   class ProgContext;
+  class Print_varContext;
   class ExprContext;
   class AssignContext; 
 
@@ -52,6 +54,15 @@ public:
     virtual size_t getRuleIndex() const override;
 
    
+  };
+
+  class  PrintContext : public ProgContext {
+  public:
+    PrintContext(ProgContext *ctx);
+
+    Print_varContext *print_var();
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   class  OneLineProgAssignContext : public ProgContext {
@@ -86,6 +97,33 @@ public:
 
   ProgContext* prog();
   ProgContext* prog(int precedence);
+  class  Print_varContext : public antlr4::ParserRuleContext {
+  public:
+    Print_varContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+   
+    Print_varContext() = default;
+    void copyFrom(Print_varContext *context);
+    using antlr4::ParserRuleContext::copyFrom;
+
+    virtual size_t getRuleIndex() const override;
+
+   
+  };
+
+  class  PrintVariableContext : public Print_varContext {
+  public:
+    PrintVariableContext(Print_varContext *ctx);
+
+    antlr4::tree::TerminalNode *PRINT();
+    antlr4::tree::TerminalNode *OPEN_BRAKET();
+    antlr4::tree::TerminalNode *VAR();
+    antlr4::tree::TerminalNode *CLOSE_BRAKET();
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  Print_varContext* print_var();
+
   class  ExprContext : public antlr4::ParserRuleContext {
   public:
     ExprContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -122,7 +160,9 @@ public:
   public:
     ParensContext(ExprContext *ctx);
 
+    antlr4::tree::TerminalNode *OPEN_BRAKET();
     ExprContext *expr();
+    antlr4::tree::TerminalNode *CLOSE_BRAKET();
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };

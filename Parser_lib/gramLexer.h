@@ -12,8 +12,9 @@
 class  gramLexer : public antlr4::Lexer {
 public:
   enum {
-    T__0 = 1, T__1 = 2, INT = 3, SEP = 4, WS = 5, MUL = 6, DIV = 7, ADD = 8, 
-    SUB = 9, EQUAL = 10, VAR = 11
+    INT = 1, SEP = 2, SEP_FOR_FUNCTIONS = 3, WS = 4, MUL = 5, DIV = 6, ADD = 7, 
+    SUB = 8, EQUAL = 9, PRINT = 10, OPEN_BRAKET = 11, CLOSE_BRAKET = 12, 
+    VAR = 13
   };
 
   explicit gramLexer(antlr4::CharStream *input);
