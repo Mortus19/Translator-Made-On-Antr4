@@ -31,6 +31,14 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitCreateFunction(gramParser::CreateFunctionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitCallFunction(gramParser::CallFunctionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitDoubleRule1(gramParser::DoubleRule1Context *ctx) override {
     return visitChildren(ctx);
   }
@@ -47,11 +55,11 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitOneLinePrint(gramParser::OneLinePrintContext *ctx) override {
+  virtual std::any visitOnlyVarParam(gramParser::OnlyVarParamContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitMultLinePrint(gramParser::MultLinePrintContext *ctx) override {
+  virtual std::any visitStringParam(gramParser::StringParamContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -72,6 +80,10 @@ public:
   }
 
   virtual std::any visitAddSub(gramParser::AddSubContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitFuncInExpr(gramParser::FuncInExprContext *ctx) override {
     return visitChildren(ctx);
   }
 

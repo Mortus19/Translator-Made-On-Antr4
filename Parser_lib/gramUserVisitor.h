@@ -14,6 +14,8 @@ class gramUserVisitor : public gramBaseVisitor {
 public:
     std::vector<string>res;
     map<string, double>value_var;
+    map<string, pair<vector<string>,gramParser::ExprContext*>>functions;
+
     gramUserVisitor(string expression = "") {
         std::stringstream stream(expression);
         antlr4::ANTLRInputStream input(stream);
@@ -26,30 +28,61 @@ public:
         visit(ctx->print_any());
         return 0;
     }
-    virtual std::any visitPrintVariable(gramParser::PrintVariableContext* ctx) override {
-        visit(ctx->string_for_print());
+    virtual std::any visitCreateFunction(gramParser::CreateFunctionContext* ctx) override {
+
+        string name_function = ctx->VAR()->getText();
+        vector<string>var_parametrs = any_cast<vector<string>>(visit(ctx->only_var_parametrs()));
+        pair<vector<string>, gramParser::ExprContext*> obj = { var_parametrs, ctx->expr()};
+        functions[name_function] = obj;
+        res.push_back("Create function");
         return 0;
     }
-    virtual std::any visitOneLinePrint(gramParser::OneLinePrintContext* ctx) override {
-        double value = any_cast<double>(visit(ctx->expr()));
-        string ans = "";
-        ans += ctx->expr()->getText();
-        ans += " = ";
-        ans += to_string(value);
-        res.push_back(ans);
+
+    virtual std::any visitCallFunction(gramParser::CallFunctionContext* ctx) override {
+        double value;
+        string name_function = ctx->VAR()->getText();
+        map<string, double>value_var_tmp;
+        vector<pair<string, string>>parametrs = any_cast<vector<pair<string, string>>>(visit(ctx->parametrs()));
+        vector<string>&all_vars = functions[name_function].first;
+        if (all_vars.size() != parametrs.size()) {
+            //Ошибка
+        }
+        swap(value_var_tmp, value_var);
+        for (int i = 0; i < all_vars.size(); i++) {
+            value_var[all_vars[i]] = stod(parametrs[i].second);
+        }
+        value = any_cast<double>(visit(functions[name_function].second));
+        swap(value_var_tmp, value_var);
+        return value;
+    }
+    virtual std::any visitOnlyVarParam(gramParser::OnlyVarParamContext* ctx) override {
+        vector<antlr4::tree::TerminalNode*> arr = ctx->VAR();
+        vector<string>ans;
+        for (auto v : arr) {
+            ans.push_back(v->getText());
+        }
         return ans;
     }
 
-    virtual std::any visitMultLinePrint(gramParser::MultLinePrintContext* ctx) override {
-        
-        std::vector<gramParser::String_for_printContext*> arr_p =
-            ctx->string_for_print();
-        for (auto p : arr_p) {
-            visit(p);
+    virtual std::any visitPrintVariable(gramParser::PrintVariableContext* ctx) override {
+        vector<pair<string,string>> arr =  any_cast<vector<pair<string,string>>>(visit(ctx->parametrs()));
+        string t;
+        for (auto v : arr) {
+            t = v.first + " = " + v.second;
+            res.push_back(t);
         }
-        return &res;
+        return 0;
     }
-
+    virtual std::any visitStringParam(gramParser::StringParamContext* ctx) override {    
+        vector<gramParser::ExprContext*> arr = ctx->expr();
+        vector<pair<string, string>>ans;
+        for (auto v : arr) {
+            double value = any_cast<double>(visit(v));
+            ans.push_back({ v->getText(), to_string(value)});
+        }
+        return ans;
+    }
+    
     virtual std::any visitOneLineProg(
         gramParser::OneLineProgContext* ctx)
         override {
