@@ -12,14 +12,15 @@
 class  gramParser : public antlr4::Parser {
 public:
   enum {
-    INT = 1, SEP = 2, SEP_FOR_FUNCTIONS = 3, WS = 4, MUL = 5, DIV = 6, PT = 7, 
-    ADD = 8, SUB = 9, EQUAL = 10, PRINT = 11, OPEN_BRAKET = 12, CLOSE_BRAKET = 13, 
-    VAR = 14
+    INT = 1, SEP = 2, SEP_FOR_FUNCTIONS = 3, MUL = 4, DIV = 5, DEF = 6, 
+    PT = 7, ADD = 8, SUB = 9, EQUAL = 10, PRINT = 11, OPEN_BRAKET = 12, 
+    CLOSE_BRAKET = 13, NAME = 14, WS = 15
   };
 
   enum {
-    RuleProg = 0, RuleDbl = 1, RulePrint_any = 2, RuleString_for_print = 3, 
-    RuleExpr = 4, RuleAssign = 5
+    RuleProg = 0, RuleCreate_function = 1, RuleCall_function = 2, RulePrint_any = 3, 
+    RuleArguments = 4, RuleParametrs = 5, RuleAssign = 6, RuleExpr = 7, 
+    RuleVar = 8, RuleDbl = 9
   };
 
   explicit gramParser(antlr4::TokenStream *input);
@@ -40,11 +41,15 @@ public:
 
 
   class ProgContext;
-  class DblContext;
+  class Create_functionContext;
+  class Call_functionContext;
   class Print_anyContext;
-  class String_for_printContext;
+  class ArgumentsContext;
+  class ParametrsContext;
+  class AssignContext;
   class ExprContext;
-  class AssignContext; 
+  class VarContext;
+  class DblContext; 
 
   class  ProgContext : public antlr4::ParserRuleContext {
   public:
@@ -98,14 +103,23 @@ public:
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
+  class  CreateSomeFunctionContext : public ProgContext {
+  public:
+    CreateSomeFunctionContext(ProgContext *ctx);
+
+    Create_functionContext *create_function();
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
   ProgContext* prog();
   ProgContext* prog(int precedence);
-  class  DblContext : public antlr4::ParserRuleContext {
+  class  Create_functionContext : public antlr4::ParserRuleContext {
   public:
-    DblContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    Create_functionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
-    DblContext() = default;
-    void copyFrom(DblContext *context);
+    Create_functionContext() = default;
+    void copyFrom(Create_functionContext *context);
     using antlr4::ParserRuleContext::copyFrom;
 
     virtual size_t getRuleIndex() const override;
@@ -113,37 +127,49 @@ public:
    
   };
 
-  class  DoubleRule3Context : public DblContext {
+  class  CreateFunctionContext : public Create_functionContext {
   public:
-    DoubleRule3Context(DblContext *ctx);
+    CreateFunctionContext(Create_functionContext *ctx);
 
-    std::vector<antlr4::tree::TerminalNode *> INT();
-    antlr4::tree::TerminalNode* INT(size_t i);
-    antlr4::tree::TerminalNode *PT();
+    antlr4::tree::TerminalNode *DEF();
+    antlr4::tree::TerminalNode *NAME();
+    antlr4::tree::TerminalNode *OPEN_BRAKET();
+    ParametrsContext *parametrs();
+    antlr4::tree::TerminalNode *CLOSE_BRAKET();
+    antlr4::tree::TerminalNode *EQUAL();
+    ExprContext *expr();
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
-  class  DoubleRule1Context : public DblContext {
-  public:
-    DoubleRule1Context(DblContext *ctx);
+  Create_functionContext* create_function();
 
-    antlr4::tree::TerminalNode *INT();
+  class  Call_functionContext : public antlr4::ParserRuleContext {
+  public:
+    Call_functionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+   
+    Call_functionContext() = default;
+    void copyFrom(Call_functionContext *context);
+    using antlr4::ParserRuleContext::copyFrom;
+
+    virtual size_t getRuleIndex() const override;
+
+   
+  };
+
+  class  CallFunctionContext : public Call_functionContext {
+  public:
+    CallFunctionContext(Call_functionContext *ctx);
+
+    antlr4::tree::TerminalNode *NAME();
+    antlr4::tree::TerminalNode *OPEN_BRAKET();
+    ArgumentsContext *arguments();
+    antlr4::tree::TerminalNode *CLOSE_BRAKET();
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
-  class  DoubleRule2Context : public DblContext {
-  public:
-    DoubleRule2Context(DblContext *ctx);
-
-    antlr4::tree::TerminalNode *PT();
-    antlr4::tree::TerminalNode *INT();
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
-  DblContext* dbl();
+  Call_functionContext* call_function();
 
   class  Print_anyContext : public antlr4::ParserRuleContext {
   public:
@@ -164,7 +190,7 @@ public:
 
     antlr4::tree::TerminalNode *PRINT();
     antlr4::tree::TerminalNode *OPEN_BRAKET();
-    String_for_printContext *string_for_print();
+    ArgumentsContext *arguments();
     antlr4::tree::TerminalNode *CLOSE_BRAKET();
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -172,12 +198,12 @@ public:
 
   Print_anyContext* print_any();
 
-  class  String_for_printContext : public antlr4::ParserRuleContext {
+  class  ArgumentsContext : public antlr4::ParserRuleContext {
   public:
-    String_for_printContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    ArgumentsContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
-    String_for_printContext() = default;
-    void copyFrom(String_for_printContext *context);
+    ArgumentsContext() = default;
+    void copyFrom(ArgumentsContext *context);
     using antlr4::ParserRuleContext::copyFrom;
 
     virtual size_t getRuleIndex() const override;
@@ -185,29 +211,73 @@ public:
    
   };
 
-  class  OneLinePrintContext : public String_for_printContext {
+  class  OnlyArgContext : public ArgumentsContext {
   public:
-    OneLinePrintContext(String_for_printContext *ctx);
+    OnlyArgContext(ArgumentsContext *ctx);
 
+    std::vector<ExprContext *> expr();
+    ExprContext* expr(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> SEP_FOR_FUNCTIONS();
+    antlr4::tree::TerminalNode* SEP_FOR_FUNCTIONS(size_t i);
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  ArgumentsContext* arguments();
+
+  class  ParametrsContext : public antlr4::ParserRuleContext {
+  public:
+    ParametrsContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+   
+    ParametrsContext() = default;
+    void copyFrom(ParametrsContext *context);
+    using antlr4::ParserRuleContext::copyFrom;
+
+    virtual size_t getRuleIndex() const override;
+
+   
+  };
+
+  class  OnlyParamContext : public ParametrsContext {
+  public:
+    OnlyParamContext(ParametrsContext *ctx);
+
+    std::vector<antlr4::tree::TerminalNode *> NAME();
+    antlr4::tree::TerminalNode* NAME(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> SEP_FOR_FUNCTIONS();
+    antlr4::tree::TerminalNode* SEP_FOR_FUNCTIONS(size_t i);
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  ParametrsContext* parametrs();
+
+  class  AssignContext : public antlr4::ParserRuleContext {
+  public:
+    AssignContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+   
+    AssignContext() = default;
+    void copyFrom(AssignContext *context);
+    using antlr4::ParserRuleContext::copyFrom;
+
+    virtual size_t getRuleIndex() const override;
+
+   
+  };
+
+  class  AssignedContext : public AssignContext {
+  public:
+    AssignedContext(AssignContext *ctx);
+
+    VarContext *var();
+    antlr4::tree::TerminalNode *EQUAL();
     ExprContext *expr();
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
-  class  MultLinePrintContext : public String_for_printContext {
-  public:
-    MultLinePrintContext(String_for_printContext *ctx);
+  AssignContext* assign();
 
-    std::vector<String_for_printContext *> string_for_print();
-    String_for_printContext* string_for_print(size_t i);
-    antlr4::tree::TerminalNode *SEP_FOR_FUNCTIONS();
-    antlr4::tree::TerminalNode *EOF();
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
-  String_for_printContext* string_for_print();
-  String_for_printContext* string_for_print(int precedence);
   class  ExprContext : public antlr4::ParserRuleContext {
   public:
     ExprContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -225,7 +295,7 @@ public:
   public:
     OnlyVarContext(ExprContext *ctx);
 
-    antlr4::tree::TerminalNode *VAR();
+    VarContext *var();
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
@@ -277,6 +347,15 @@ public:
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
+  class  FuncInExprContext : public ExprContext {
+  public:
+    FuncInExprContext(ExprContext *ctx);
+
+    Call_functionContext *call_function();
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
   class  DoubleContext : public ExprContext {
   public:
     DoubleContext(ExprContext *ctx);
@@ -288,12 +367,12 @@ public:
 
   ExprContext* expr();
   ExprContext* expr(int precedence);
-  class  AssignContext : public antlr4::ParserRuleContext {
+  class  VarContext : public antlr4::ParserRuleContext {
   public:
-    AssignContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    VarContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
-    AssignContext() = default;
-    void copyFrom(AssignContext *context);
+    VarContext() = default;
+    void copyFrom(VarContext *context);
     using antlr4::ParserRuleContext::copyFrom;
 
     virtual size_t getRuleIndex() const override;
@@ -301,24 +380,66 @@ public:
    
   };
 
-  class  AssignedContext : public AssignContext {
+  class  InitVarContext : public VarContext {
   public:
-    AssignedContext(AssignContext *ctx);
+    InitVarContext(VarContext *ctx);
 
-    antlr4::tree::TerminalNode *VAR();
-    antlr4::tree::TerminalNode *EQUAL();
-    ExprContext *expr();
+    antlr4::tree::TerminalNode *NAME();
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
-  AssignContext* assign();
+  VarContext* var();
+
+  class  DblContext : public antlr4::ParserRuleContext {
+  public:
+    DblContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+   
+    DblContext() = default;
+    void copyFrom(DblContext *context);
+    using antlr4::ParserRuleContext::copyFrom;
+
+    virtual size_t getRuleIndex() const override;
+
+   
+  };
+
+  class  DoubleRule3Context : public DblContext {
+  public:
+    DoubleRule3Context(DblContext *ctx);
+
+    std::vector<antlr4::tree::TerminalNode *> INT();
+    antlr4::tree::TerminalNode* INT(size_t i);
+    antlr4::tree::TerminalNode *PT();
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  DoubleRule1Context : public DblContext {
+  public:
+    DoubleRule1Context(DblContext *ctx);
+
+    antlr4::tree::TerminalNode *INT();
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  DoubleRule2Context : public DblContext {
+  public:
+    DoubleRule2Context(DblContext *ctx);
+
+    antlr4::tree::TerminalNode *PT();
+    antlr4::tree::TerminalNode *INT();
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  DblContext* dbl();
 
 
   bool sempred(antlr4::RuleContext *_localctx, size_t ruleIndex, size_t predicateIndex) override;
 
   bool progSempred(ProgContext *_localctx, size_t predicateIndex);
-  bool string_for_printSempred(String_for_printContext *_localctx, size_t predicateIndex);
   bool exprSempred(ExprContext *_localctx, size_t predicateIndex);
 
   // By default the static state used to implement the parser is lazily initialized during the first
