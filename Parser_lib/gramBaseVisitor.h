@@ -31,6 +31,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitCreateSomeFunction(gramParser::CreateSomeFunctionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitCreateFunction(gramParser::CreateFunctionContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -39,27 +43,19 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitDoubleRule1(gramParser::DoubleRule1Context *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual std::any visitDoubleRule2(gramParser::DoubleRule2Context *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual std::any visitDoubleRule3(gramParser::DoubleRule3Context *ctx) override {
-    return visitChildren(ctx);
-  }
-
   virtual std::any visitPrintVariable(gramParser::PrintVariableContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitOnlyVarParam(gramParser::OnlyVarParamContext *ctx) override {
+  virtual std::any visitOnlyArg(gramParser::OnlyArgContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitStringParam(gramParser::StringParamContext *ctx) override {
+  virtual std::any visitOnlyParam(gramParser::OnlyParamContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitAssigned(gramParser::AssignedContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -91,7 +87,19 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitAssigned(gramParser::AssignedContext *ctx) override {
+  virtual std::any visitInitVar(gramParser::InitVarContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitDoubleRule1(gramParser::DoubleRule1Context *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitDoubleRule2(gramParser::DoubleRule2Context *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitDoubleRule3(gramParser::DoubleRule3Context *ctx) override {
     return visitChildren(ctx);
   }
 
