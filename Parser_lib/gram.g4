@@ -1,14 +1,22 @@
 grammar gram;
 
-
-prog: expr # OneLineProg
-| assign # OneLineProgAssign
-| print_any #Print
-| create_function #CreateSomeFunction
-| prog SEP prog EOF? # MultLineProg
+prog:
+    statement? EOF #Main
 ;
 
-create_function: DEF NAME OPEN_BRAKET parametrs CLOSE_BRAKET EQUAL expr #CreateFunction;
+statement:
+  (line SEP)+ # MultLineProg
+;
+
+create_function:DEF NAME OPEN_BRAKET parametrs CLOSE_BRAKET '{' statement? (RET expr SEP)? '}' #CreateFunction
+;
+
+line:create_function #CreateSomeFunction
+|expr # OneLineProg
+| assign # OneLineProgAssign
+| print_any #Print
+;
+
 
 call_function: NAME OPEN_BRAKET arguments CLOSE_BRAKET #CallFunction;
 
@@ -17,6 +25,7 @@ print_any: PRINT OPEN_BRAKET arguments CLOSE_BRAKET # PrintVariable
 
 arguments : expr (SEP_FOR_FUNCTIONS expr)* #OnlyArg 
 ;
+
 parametrs: NAME (SEP_FOR_FUNCTIONS NAME)* #OnlyParam
 ;
 
@@ -40,15 +49,16 @@ dbl: INT #DoubleRule1
 ;
 
 INT: [0-9]+;
+DEF: 'def';
 SEP: ';';
 SEP_FOR_FUNCTIONS: ',';
 MUL: '*';
 DIV: '/';
-DEF: 'def';
 PT: '.';
 ADD: '+';
 SUB: '-';
 EQUAL: '=';
+RET: 'return';
 PRINT: 'print';
 OPEN_BRAKET: '(';
 CLOSE_BRAKET: ')';

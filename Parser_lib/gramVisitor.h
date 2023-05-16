@@ -19,17 +19,19 @@ public:
   /**
    * Visit parse trees produced by gramParser.
    */
-    virtual std::any visitPrint(gramParser::PrintContext *context) = 0;
-
-    virtual std::any visitOneLineProgAssign(gramParser::OneLineProgAssignContext *context) = 0;
-
-    virtual std::any visitOneLineProg(gramParser::OneLineProgContext *context) = 0;
+    virtual std::any visitMain(gramParser::MainContext *context) = 0;
 
     virtual std::any visitMultLineProg(gramParser::MultLineProgContext *context) = 0;
 
+    virtual std::any visitCreateFunction(gramParser::CreateFunctionContext *context) = 0;
+
     virtual std::any visitCreateSomeFunction(gramParser::CreateSomeFunctionContext *context) = 0;
 
-    virtual std::any visitCreateFunction(gramParser::CreateFunctionContext *context) = 0;
+    virtual std::any visitOneLineProg(gramParser::OneLineProgContext *context) = 0;
+
+    virtual std::any visitOneLineProgAssign(gramParser::OneLineProgAssignContext *context) = 0;
+
+    virtual std::any visitPrint(gramParser::PrintContext *context) = 0;
 
     virtual std::any visitCallFunction(gramParser::CallFunctionContext *context) = 0;
 
