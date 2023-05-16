@@ -14,8 +14,12 @@ class gramUserVisitor : public gramBaseVisitor {
 public:
     std::vector<string>res;
     map<string, double>value_var;
-    map<string, pair<vector<string>,gramParser::ExprContext*>>functions;
-
+    map<string, gramParser::CreateFunctionContext*>functions;
+    virtual std::any visitMain(gramParser::MainContext* ctx) override {
+        if(ctx->statement() != NULL)
+            visit(ctx->statement());
+        return 0;
+    }
     gramUserVisitor(string expression = "") {
         std::stringstream stream(expression);
         antlr4::ANTLRInputStream input(stream);
@@ -28,10 +32,7 @@ public:
         visit(ctx->print_any());
         return 0;
     }
-
     virtual std::any visitOnlyArg(gramParser::OnlyArgContext* ctx) override {
-        
-
         vector<pair<string,string>>ans;
         std::vector<gramParser::ExprContext*> arr_p = ctx->expr();
         for (auto t : arr_p) {
@@ -50,32 +51,41 @@ public:
     }
     virtual std::any visitCreateSomeFunction(gramParser::CreateSomeFunctionContext* ctx) override {
         visit(ctx->create_function());
-        res.push_back("Created function!");
         return 0;
     }
+
     virtual std::any visitCreateFunction(gramParser::CreateFunctionContext* ctx) override {
         string name_function = ctx->NAME()->getText();
-        vector<string>parametrs = any_cast<vector<string>>(visit(ctx->parametrs()));
-        pair<vector<string>, gramParser::ExprContext*> obj = {parametrs, ctx->expr()};
-        functions[name_function] = obj;
+        functions[name_function] = ctx;
         return 0;
     }
 
     virtual std::any visitCallFunction(gramParser::CallFunctionContext* ctx) override {
-        double value;
         string name_function = ctx->NAME()->getText();
         map<string, double>value_var_tmp;
+        map<string, gramParser::CreateFunctionContext*>functions_tmp;
         vector<pair<string, string>>arguments = any_cast<vector<pair<string, string>>>(visit(ctx->arguments()));
-        vector<string>&all_vars = functions[name_function].first;
+        vector<string>all_vars = any_cast<vector<string>>(visit(functions[name_function]->parametrs()));
         if (all_vars.size() != arguments.size()) {
             //Ошибка
+            throw -1;
         }
+        gramParser::StatementContext* now_statement = functions[name_function]->statement();
+        gramParser::ExprContext* finile_expr = functions[name_function]->expr();
         swap(value_var_tmp, value_var);
+        swap(functions_tmp, functions);
+
         for (int i = 0; i < all_vars.size(); i++) {
+            //Присваеваем аргументы функции к ее параметрам
             value_var[all_vars[i]] = stod(arguments[i].second);
         }
-        value = any_cast<double>(visit(functions[name_function].second));
+        if(now_statement!=NULL)
+            visit(now_statement);
+        double value = 0;
+        if (finile_expr != NULL)
+            value = any_cast<double>(visit(finile_expr));
         swap(value_var_tmp, value_var);
+        swap(functions_tmp, functions);
         return value;
     }
 
@@ -97,7 +107,6 @@ public:
         return val;
     }
     virtual std::any visitOneLineProgAssign(gramParser::OneLineProgAssignContext* ctx) override {
-        res.push_back("Sucsess assigned");
         visit(ctx->assign());
         return 0;
     }
@@ -116,9 +125,9 @@ public:
     virtual std::any visitMultLineProg(
         gramParser::MultLineProgContext* ctx)
         override {
-        std::vector<gramParser::ProgContext*> arr_p =
-            ctx->prog();
-        for (gramParser::ProgContext* p : arr_p) {
+        std::vector<gramParser::LineContext*> arr_p =
+            ctx->line();
+        for (auto p : arr_p) {
             visit(p);
         }
         return &res;
